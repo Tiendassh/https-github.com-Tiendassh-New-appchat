@@ -349,30 +349,43 @@ DIRECTRICES IMPORTANTES:
 
           // 3. Try Gemini standard if Grok/Venice failed or is not active
           if (!replyText && apiKey) {
-            const historyParts = recentMessages.map(m => ({
-              role: m.senderId === userId ? 'user' : 'model',
-              parts: [{ text: m.text }]
-            }));
+            try {
+              const historyParts = recentMessages.map(m => ({
+                role: m.senderId === userId ? 'user' : 'model',
+                parts: [{ text: m.text }]
+              }));
 
-            const ai = new GoogleGenAI({
-              apiKey,
-              httpOptions: {
-                headers: {
-                  'User-Agent': 'aistudio-build',
+              const ai = new GoogleGenAI({
+                apiKey,
+                httpOptions: {
+                  headers: {
+                    'User-Agent': 'aistudio-build',
+                  },
                 },
-              },
-            });
+              });
 
-            const aiResponse = await ai.models.generateContent({
-              model: 'gemini-3.5-flash',
-              contents: historyParts,
-              config: {
-                systemInstruction,
-                temperature: 0.9,
-              },
-            });
+              const aiResponse = await ai.models.generateContent({
+                model: 'gemini-3.5-flash',
+                contents: historyParts,
+                config: {
+                  systemInstruction,
+                  temperature: 0.9,
+                },
+              });
 
-            replyText = aiResponse.text || '';
+              replyText = aiResponse.text || '';
+              
+              if (!replyText) {
+                 console.warn("Gemini returned empty text. Full response:", JSON.stringify(aiResponse));
+              }
+            } catch (geminiError: any) {
+              console.error("Gemini API Error details:", {
+                message: geminiError.message,
+                stack: geminiError.stack,
+                userId
+              });
+              // Don't throw, let it fallback to the manual pool below
+            }
           }
 
           if (!replyText) {

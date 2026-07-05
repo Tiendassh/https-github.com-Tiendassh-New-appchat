@@ -210,7 +210,8 @@ export async function POST(req: NextRequest) {
         }
 
         if (!base64Data) {
-          throw new Error('No image was returned from the model.');
+          console.warn("Gemini Image Response parts:", JSON.stringify(response.candidates?.[0]?.content?.parts));
+          throw new Error('No image data was returned from the model. Check if you have a Paid API key for this model.');
         }
 
         const avatarUrl = `data:image/png;base64,${base64Data}`;
@@ -219,7 +220,11 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ success: true, avatarUrl, provider: 'gemini' }, { headers: SECURITY_HEADERS });
       } catch (geminiError: any) {
-        console.warn('Gemini avatar generation failed, falling back to styled Unsplash photo:', geminiError.message || geminiError);
+        console.error('Gemini avatar generation detailed error:', {
+            message: geminiError.message,
+            userId,
+            model: 'gemini-3.1-flash-lite-image'
+        });
         
         let fallbackUrl = '';
         if (style === 'anime') {
@@ -311,13 +316,18 @@ export async function POST(req: NextRequest) {
         }
 
         if (!base64Data) {
-          throw new Error('No image was returned from Gemini.');
+          console.warn("Gemini Custom Image Response parts:", JSON.stringify(response.candidates?.[0]?.content?.parts));
+          throw new Error('No image data was returned from Gemini. Check if you have a Paid API key.');
         }
 
         const imageUrl = `data:image/png;base64,${base64Data}`;
         return NextResponse.json({ success: true, imageUrl, provider: 'gemini' }, { headers: SECURITY_HEADERS });
       } catch (geminiError: any) {
-        console.warn('Gemini scene generation failed, falling back to styled Unsplash scene:', geminiError.message || geminiError);
+        console.error('Gemini scene generation detailed error:', {
+            message: geminiError.message,
+            userId,
+            model: 'gemini-3.1-flash-lite-image'
+        });
         
         let fallbackUrl = '';
         if (style === 'anime') {
