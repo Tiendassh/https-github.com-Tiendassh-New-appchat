@@ -5898,28 +5898,51 @@ export default function AnonymousChatApp() {
                     </div>
                   </div>
 
-                  {/* Mobile AI Engine selection */}
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400">Motor de Inteligencia Artificial</label>
-                    <div className="grid grid-cols-2 gap-1.5">
+                  {/* AI Engine selection */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Cpu className="w-3 h-3 text-indigo-400" />
+                        Motor de Inteligencia Artificial
+                      </label>
+                      <span className="text-[8px] bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 rounded-md font-mono font-bold uppercase">Multi-Model</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
                       {[
-                        { id: 'gemini', label: 'Gemini ✨' },
-                        { id: 'grok', label: 'Grok 🔮' },
+                        { id: 'gemini', label: 'Gemini', icon: '✨', color: 'indigo' },
+                        { id: 'grok', label: 'Grok', icon: '🔮', color: 'rose' },
+                        { id: 'venice', label: 'Venice', icon: '🎭', color: 'teal' },
                       ].map((e) => (
                         <button
                           key={e.id}
                           type="button"
-                          onClick={() => setGfEditingEngine(e.id as 'gemini' | 'grok')}
-                          className={`py-1.5 px-2 text-[10px] font-bold rounded-lg border transition-all cursor-pointer ${
+                          onClick={() => {
+                            setGfEditingEngine(e.id as 'gemini' | 'grok' | 'venice');
+                            // Instantly update the current config preview
+                            setGirlfriendConfig(prev => prev ? { ...prev, aiEngine: e.id as any } : null);
+                            playInteractionMode('click');
+                          }}
+                          className={`flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-2xl border transition-all cursor-pointer relative overflow-hidden group ${
                             gfEditingEngine === e.id
-                              ? 'bg-rose-500/10 border-rose-500 text-rose-400'
-                              : 'bg-slate-950 border-transparent text-slate-500'
+                              ? `bg-${e.color}-500/10 border-${e.color}-500/50 ring-1 ring-${e.color}-500/20`
+                              : 'bg-slate-950 border-slate-800/50 hover:border-slate-700 text-slate-500'
                           }`}
                         >
-                          {e.label}
+                          {gfEditingEngine === e.id && (
+                            <motion.div layoutId="activeEngine" className={`absolute inset-0 bg-${e.color}-500/5 z-0`} />
+                          )}
+                          <span className={`text-sm z-10 ${gfEditingEngine === e.id ? 'grayscale-0' : 'grayscale opacity-70'}`}>{e.icon}</span>
+                          <span className={`text-[9px] font-black uppercase tracking-tighter z-10 ${gfEditingEngine === e.id ? `text-${e.color}-400` : ''}`}>
+                            {e.label}
+                          </span>
                         </button>
                       ))}
                     </div>
+                    <p className="text-[8px] text-slate-500 italic text-center px-2">
+                      {gfEditingEngine === 'gemini' ? 'Ideal para razonamiento complejo y descripciones detalladas.' : 
+                       gfEditingEngine === 'grok' ? 'Optimizado para creatividad sin censura y fotorrealismo.' : 
+                       'Máxima privacidad y libertad creativa (Venice.ai).'}
+                    </p>
                   </div>
 
                   {/* Mobile Grok Multimedia Studio */}
