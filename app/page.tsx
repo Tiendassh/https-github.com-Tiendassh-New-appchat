@@ -4273,47 +4273,60 @@ export default function AnonymousChatApp() {
                 </div>
 
                 <div className="p-6 space-y-6">
-                  {/* Active Player (if selected) */}
+                  {/* Active Player (Cinematic Theater Mode) */}
                   {selectedVideo && (
-                    <div className="bg-slate-900/60 border border-fuchsia-500/30 rounded-3xl overflow-hidden shadow-2xl p-5 space-y-4 animate-fadeIn">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
-                        <div className="flex items-center gap-2.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-fuchsia-500 animate-ping shrink-0" />
-                          <h3 className="text-sm font-black text-white uppercase tracking-wider">{selectedVideo.title}</h3>
-                          <span className="text-[9px] bg-slate-950/80 text-fuchsia-400 font-mono px-2 py-0.5 rounded border border-slate-800 uppercase shrink-0">
-                            {selectedVideo.category}
-                          </span>
+                    <div className="bg-slate-900/80 border border-fuchsia-500/40 rounded-[40px] overflow-hidden shadow-[0_30px_100px_-20px_rgba(0,0,0,0.8)] space-y-0 animate-fadeIn mb-10 relative group">
+                      {/* Ambient Glow */}
+                      <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-600/20 to-indigo-600/20 blur-2xl opacity-40 transition-opacity group-hover:opacity-60 pointer-events-none" />
+                      
+                      {/* Header (Floating Style) */}
+                      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between p-8 bg-gradient-to-b from-slate-950/80 to-transparent backdrop-blur-sm border-b border-white/5 gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-fuchsia-600/10 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400">
+                             <Film className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-black text-white uppercase tracking-tight leading-none mb-1.5">{selectedVideo.title}</h3>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-black text-fuchsia-400 uppercase tracking-[0.2em] bg-fuchsia-500/10 px-2 py-0.5 rounded border border-fuchsia-500/20">
+                                {selectedVideo.category}
+                              </span>
+                              <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1">
+                                <Globe className="w-3 h-3" /> {selectedVideo.source}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                        
+                        <div className="flex items-center gap-3">
                           <button
                             onClick={() => {
                               setSelectedVideo(null);
                               playInteractionMode('click');
                             }}
-                            className="p-1.5 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-white rounded-full transition-colors cursor-pointer shrink-0"
-                            title="Cerrar Reproductor"
+                            className="p-3 bg-white/5 hover:bg-rose-600 border border-white/10 hover:border-rose-400 text-slate-300 hover:text-white rounded-2xl transition-all cursor-pointer active:scale-95 group/close"
                           >
-                            <X className="w-4 h-4" />
+                            <X className="w-6 h-6 transition-transform group-hover/close:rotate-90" />
                           </button>
                         </div>
                       </div>
 
-                      {/* Player Options Selector */}
-                      <div className="flex flex-col xl:flex-row gap-4 items-center justify-between bg-slate-950/60 p-3 rounded-2xl border border-slate-850">
-                        <div className="flex flex-wrap gap-1.5 w-full xl:w-auto">
+                      {/* Professional Control Bar */}
+                      <div className="relative z-10 flex flex-col lg:flex-row gap-4 items-center justify-between bg-slate-950/80 p-5 border-y border-white/5 px-8">
+                        <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
                           <button
                             type="button"
                             onClick={() => {
                               setPlayerMode('integrated');
                               playInteractionMode('select');
                             }}
-                            className={`py-1.5 px-3 text-[10px] font-bold rounded-lg border transition-all cursor-pointer ${
+                            className={`flex items-center gap-2 py-2.5 px-5 text-[11px] font-black rounded-xl border transition-all cursor-pointer ${
                               playerMode === 'integrated'
-                                ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400 font-black'
-                                : 'bg-slate-900/40 border-transparent text-slate-500 hover:text-slate-400'
+                                ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-600/40'
+                                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800'
                             }`}
                           >
-                            📹 Reproductor del Sitio
+                            <Monitor className="w-4 h-4" /> REPRODUCTOR LOCAL
                           </button>
                           <button
                             type="button"
@@ -4321,45 +4334,32 @@ export default function AnonymousChatApp() {
                               setPlayerMode('proxy');
                               playInteractionMode('select');
                             }}
-                            className={`py-1.5 px-3 text-[10px] font-bold rounded-lg border transition-all cursor-pointer ${
+                            className={`flex items-center gap-2 py-2.5 px-5 text-[11px] font-black rounded-xl border transition-all cursor-pointer ${
                               playerMode === 'proxy'
-                                ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-400 font-black'
-                                : 'bg-slate-900/40 border-transparent text-slate-500 hover:text-slate-400'
+                                ? 'bg-fuchsia-600 border-fuchsia-400 text-white shadow-lg shadow-fuchsia-600/40'
+                                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800'
                             }`}
                           >
-                            🚀 Servidor Externo (Proxy)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPlayerMode('external');
-                              playInteractionMode('select');
-                            }}
-                            className={`py-1.5 px-3 text-[10px] font-bold rounded-lg border transition-all cursor-pointer ${
-                              playerMode === 'external'
-                                ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-400 font-black'
-                                : 'bg-slate-900/40 border-transparent text-slate-500 hover:text-slate-400'
-                            }`}
-                          >
-                            ↗️ Ventana Externa
+                            <Globe className="w-4 h-4" /> SAFE PROXY (RECOMENDADO)
                           </button>
                         </div>
 
-                        {/* Config proxy address directly in player */}
-                        <div className="flex items-center gap-2 w-full xl:w-auto">
-                          <Globe className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                          <input
+                        <div className="flex items-center gap-4 bg-black/40 p-2 rounded-2xl border border-white/5 w-full lg:w-auto">
+                           <div className="p-2 bg-slate-900 rounded-xl text-slate-500">
+                             <Settings className="w-4 h-4" />
+                           </div>
+                           <input
                             type="text"
                             value={proxyServerUrl}
                             onChange={(e) => setProxyServerUrl(e.target.value)}
-                            placeholder="URL de tu sitio en Render (ej. https://peivatechat.onrender.com)"
-                            className="w-full xl:w-64 bg-slate-900 border border-slate-800 rounded-lg py-1 px-2.5 text-[10px] text-slate-300 placeholder-slate-600 focus:outline-none focus:border-fuchsia-500 transition-colors"
+                            placeholder="Render URL (Opcional)..."
+                            className="flex-1 lg:w-64 bg-transparent border-none py-1 px-2 text-[11px] text-slate-300 placeholder-slate-700 focus:outline-none font-mono"
                           />
                         </div>
                       </div>
 
-                      {/* Display Screen based on Mode */}
-                      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-slate-950 shadow-inner flex flex-col items-center justify-center">
+                      {/* THE CINEMATIC STAGE */}
+                      <div className="relative z-10 w-full aspect-video lg:aspect-[21/9] bg-black shadow-[inset_0_0_100px_rgba(0,0,0,1)] overflow-hidden group/theater">
                         {playerMode === 'integrated' ? (
                           <iframe
                             src={`/player.html?url=${encodeURIComponent(selectedVideo.embedUrl)}`}
@@ -4375,75 +4375,89 @@ export default function AnonymousChatApp() {
                             allow="autoplay; encrypted-media; picture-in-picture"
                           />
                         ) : (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center space-y-4 bg-gradient-to-b from-slate-950 to-fuchsia-950/20">
-                            <div className="w-16 h-16 rounded-full bg-fuchsia-600/10 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400 animate-pulse shadow-lg shadow-fuchsia-500/10">
-                              <ExternalLink className="w-8 h-8" />
-                            </div>
-                            <div className="max-w-md space-y-1">
-                              <h4 className="text-sm font-black text-white">Modo Ventana Externa Seguro</h4>
-                              <p className="text-xs text-slate-400">
-                                Al abrir el show en una ventana independiente, se evitan las restricciones de cookies de terceros y el bloqueo de CORS del navegador.
-                              </p>
-                            </div>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center space-y-8 bg-slate-950">
+                             <div className="relative w-24 h-24 rounded-[32px] bg-gradient-to-br from-indigo-600 to-fuchsia-600 flex items-center justify-center text-white shadow-2xl animate-bounce">
+                               <ExternalLink className="w-12 h-12" />
+                             </div>
+                             <div className="max-w-md space-y-4">
+                               <h4 className="text-2xl font-black text-white uppercase tracking-tight">Ventana Independiente</h4>
+                               <p className="text-sm text-slate-400 leading-relaxed">
+                                 Para máxima resolución y sin restricciones del navegador, abre el show en una nueva pestaña.
+                               </p>
+                               <a
+                                  href={`/player.html?url=${encodeURIComponent(selectedVideo.embedUrl)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-3 bg-white text-black font-black px-10 py-5 rounded-2xl text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl"
+                                >
+                                  Abrir Player Maestro <ExternalLink className="w-5 h-5" />
+                                </a>
+                             </div>
+                          </div>
+                        )}
+                        
+                        {/* Interactive Overlay on top */}
+                        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover/theater:opacity-100 transition-opacity duration-500 pointer-events-none flex items-start justify-center pt-8">
+                           <div className="flex items-center gap-3 px-6 py-2 bg-fuchsia-600/20 backdrop-blur-md border border-fuchsia-500/30 rounded-full">
+                              <div className="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse" />
+                              <span className="text-[10px] font-black text-white tracking-[0.3em] uppercase">Visualización en Alta Calidad</span>
+                           </div>
+                        </div>
+                      </div>
+
+                      {/* Cinematic Footer Metadata */}
+                      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 p-8 bg-slate-950/80 border-t border-white/5 gap-8">
+                        <div className="space-y-3">
+                           <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                             <Info className="w-3 h-3" /> Datos del Show
+                           </span>
+                           <div className="flex flex-wrap gap-4">
+                              <div className="flex flex-col">
+                                 <span className="text-[10px] text-slate-600 font-bold mb-1">Vistas</span>
+                                 <span className="text-sm font-black text-white flex items-center gap-1.5">
+                                   <Eye className="w-4 h-4 text-fuchsia-500" /> {selectedVideo.views.toLocaleString()}
+                                 </span>
+                              </div>
+                              <div className="flex flex-col">
+                                 <span className="text-[10px] text-slate-600 font-bold mb-1">Rating</span>
+                                 <span className="text-sm font-black text-emerald-400">★ {selectedVideo.rating}%</span>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col justify-center items-center text-center">
+                           <div className="p-4 rounded-2xl bg-white/5 border border-white/5 w-full">
+                              <p className="text-[10px] text-slate-400 font-medium mb-2">Este video se transmite desde:</p>
+                              <p className="text-sm font-black text-white uppercase tracking-widest">{selectedVideo.source}</p>
+                           </div>
+                        </div>
+
+                        <div className="flex flex-col justify-center items-end">
                             <a
                               href={`/player.html?url=${encodeURIComponent(selectedVideo.embedUrl)}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              onClick={() => playInteractionMode('click')}
-                              className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 to-rose-600 hover:from-fuchsia-500 hover:to-rose-500 text-white font-extrabold px-6 py-3 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-fuchsia-600/20 hover:scale-105 transition-all cursor-pointer"
+                              className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-slate-900 border border-slate-800 hover:border-indigo-500/50 text-slate-300 hover:text-white font-black px-6 py-4 rounded-2xl text-[10px] uppercase tracking-widest transition-all"
                             >
-                              Abrir Player Maestro <ExternalLink className="w-4 h-4" />
+                              Abrir Reproductor Maestro <ExternalLink className="w-4 h-4" />
                             </a>
-                            <div className="text-[10px] text-slate-500 flex gap-4">
-                              <a
-                                href={selectedVideo.embedUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline hover:text-slate-300"
-                              >
-                                Enlace directo al embed original
-                              </a>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Footer & Fallback Link */}
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-                        <div className="flex flex-col sm:flex-row items-center gap-2">
-                          <p className="flex items-center gap-1">
-                            <span>Proveedor original:</span>
-                            <span className="font-extrabold text-slate-200">{selectedVideo.source}</span>
-                          </p>
-                          <span className="hidden sm:inline text-slate-700">|</span>
-                          <a
-                            href={`/player.html?url=${encodeURIComponent(selectedVideo.embedUrl)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-fuchsia-400 hover:text-fuchsia-300 flex items-center gap-1 font-bold underline transition-colors"
-                          >
-                            Abrir Player Maestro <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className="flex items-center gap-1">
-                            <Eye className="w-3.5 h-3.5 text-fuchsia-400" />
-                            {selectedVideo.views.toLocaleString()} vistas
-                          </span>
-                          <span className="text-emerald-400 font-mono font-bold">
-                            ★ {selectedVideo.rating}% rating
-                          </span>
                         </div>
                       </div>
 
-                      {/* Browser warning banner if using integrated */}
+                      {/* Heuristic banner */}
                       {(playerMode === 'integrated' || playerMode === 'proxy') && (
-                        <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300 p-3 rounded-xl text-[10px] leading-relaxed flex items-start gap-2">
-                          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
-                          <div>
-                            <span className="font-extrabold block">¿No carga el video?</span>
-                            Muchos servidores de streaming bloquean que sus videos se carguen dentro de la ventana de diseño de AI Studio. Cambia al modo <strong className="text-fuchsia-300 font-extrabold">Proxy en Render</strong> o haz clic en <strong className="text-fuchsia-300 font-extrabold">Abrir en Render</strong> arriba para reproducirlo sin restricciones.
-                          </div>
+                        <div className="relative z-10 bg-indigo-500/10 border-t border-indigo-500/20 p-5">
+                           <div className="flex items-start gap-4 max-w-4xl mx-auto">
+                              <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                                <AlertTriangle className="w-5 h-5" />
+                              </div>
+                              <div className="space-y-1">
+                                <p className="text-[11px] font-black text-indigo-200 uppercase tracking-tight">Optimización de Reproducción</p>
+                                <p className="text-[10px] text-indigo-500/70 leading-relaxed font-medium italic">
+                                  Estamos forzando la compatibilidad. Si el reproductor no inicia, activa el <strong className="text-indigo-400">SAFE PROXY</strong> arriba para desbloquear el contenido mediante el servidor del sitio.
+                                </p>
+                              </div>
+                           </div>
                         </div>
                       )}
                     </div>
