@@ -350,10 +350,42 @@ DIRECTRICES IMPORTANTES:
           // 3. Try Gemini standard if Grok/Venice failed or is not active
           if (!replyText && apiKey) {
             try {
-              const historyParts = recentMessages.map(m => ({
-                role: m.senderId === userId ? 'user' : 'model',
-                parts: [{ text: m.text }]
-              }));
+              // Build clean history that guarantees:
+              // 1. Alternating user/model roles (merges consecutive messages)
+              // 2. Starts with 'user'
+              // 3. Ends with 'user'
+              const historyParts: any[] = [];
+              recentMessages.forEach((m) => {
+                const role = m.senderId === userId ? 'user' : 'model';
+                if (historyParts.length > 0 && historyParts[historyParts.length - 1].role === role) {
+                  // Merge consecutive messages from same sender
+                  historyParts[historyParts.length - 1].parts[0].text += '\n' + m.text;
+                } else {
+                  historyParts.push({
+                    role,
+                    parts: [{ text: m.text }]
+                  });
+                }
+              });
+
+              // Ensure starts with user
+              while (historyParts.length > 0 && historyParts[0].role === 'model') {
+                historyParts.shift();
+              }
+
+              // Ensure ends with user
+              while (historyParts.length > 0 && historyParts[historyParts.length - 1].role === 'model') {
+                historyParts.pop();
+              }
+
+              // Fallback if empty
+              if (historyParts.length === 0) {
+                const lastUserMsg = [...recentMessages].reverse().find(m => m.senderId === userId);
+                historyParts.push({
+                  role: 'user',
+                  parts: [{ text: lastUserMsg ? lastUserMsg.text : 'Hola' }]
+                });
+              }
 
               const ai = new GoogleGenAI({
                 apiKey,

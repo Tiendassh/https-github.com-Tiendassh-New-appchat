@@ -5689,7 +5689,7 @@ export default function AnonymousChatApp() {
 
                       <form
                         onSubmit={handleSendMessage}
-                        className="flex gap-2"
+                        className="flex items-center gap-1.5 sm:gap-2"
                       >
                         <button
                           type="button"
@@ -5697,14 +5697,14 @@ export default function AnonymousChatApp() {
                             setShowAttachmentMenu(!showAttachmentMenu);
                             playInteractionMode('click');
                           }}
-                          className={`p-3 border rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square ${
+                          className={`p-2 sm:p-3 border rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square shrink-0 ${
                             showAttachmentMenu 
                               ? 'bg-indigo-500/10 border-indigo-500/40 text-indigo-400' 
                               : 'bg-slate-900 border-slate-800 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-slate-400 hover:text-indigo-400'
                           }`}
                           title="Adjuntar multimedia"
                         >
-                          <Paperclip className="w-4 h-4" />
+                          <Paperclip className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </button>
 
                         {/* Direct viewOnce Toggle Button */}
@@ -5714,36 +5714,36 @@ export default function AnonymousChatApp() {
                             setViewOnceEnabled(!viewOnceEnabled);
                             playInteractionMode('click');
                           }}
-                          className={`p-3 border rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square ${
+                          className={`p-2 sm:p-3 border rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square shrink-0 ${
                             viewOnceEnabled 
                               ? 'bg-pink-500/15 border-pink-500/40 text-pink-400 shadow-[0_0_10px_rgba(236,72,153,0.2)]' 
                               : 'bg-slate-900 border-slate-800 hover:border-pink-500/30 hover:bg-pink-500/5 text-slate-500 hover:text-pink-400'
                           }`}
                           title="Alternar Ver una Sola Vez (Modo Efímero)"
                         >
-                          {viewOnceEnabled ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          {viewOnceEnabled ? <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                         </button>
 
                         <button
                           type="button"
                           onClick={startRecording}
-                          className="p-3 bg-slate-900 border border-slate-800 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-slate-400 hover:text-indigo-400 rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square"
+                          className="p-2 sm:p-3 bg-slate-900 border border-slate-800 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-slate-400 hover:text-indigo-400 rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square shrink-0"
                           title="Grabar mensaje de voz"
                         >
-                          <Mic className="w-4 h-4 text-indigo-400" />
+                          <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-400" />
                         </button>
 
                         <button
                           type="button"
                           onClick={handleChatScreenShare}
-                          className={`p-3 border rounded-2xl transition-all cursor-pointer flex items-center justify-center aspect-square ${
+                          className={`p-2 sm:p-3 border rounded-2xl transition-all cursor-pointer items-center justify-center aspect-square shrink-0 hidden sm:flex ${
                             isScreenSharing 
                               ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/25' 
                               : 'bg-slate-900 border-slate-800 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-slate-400 hover:text-indigo-400'
                           }`}
                           title={isScreenSharing ? "Detener de compartir pantalla" : "Compartir pantalla"}
                         >
-                          <ScreenShare className="w-4 h-4" />
+                          <ScreenShare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </button>
                         
                         <input
@@ -5751,20 +5751,20 @@ export default function AnonymousChatApp() {
                           maxLength={1000}
                           value={messageInput}
                           onChange={(e) => setMessageInput(e.target.value)}
-                          className="flex-1 bg-slate-900/60 border border-slate-800 rounded-2xl py-3 px-4 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-xs"
-                          placeholder={viewOnceEnabled ? "Modo Efímero activo. Escribe un mensaje..." : (currentRoom === 'novia-ia' ? (girlfriendConfig ? `Escríbele algo lindo a ${girlfriendConfig.name}...` : "Escríbele algo lindo...") : "Escribe un mensaje anónimo...")}
+                          className="flex-1 min-w-[50px] bg-slate-900/60 border border-slate-800 rounded-2xl py-2.5 sm:py-3 px-3 sm:px-4 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-xs"
+                          placeholder={viewOnceEnabled ? "Modo Efímero..." : (currentRoom === 'novia-ia' ? (girlfriendConfig ? `Escríbele a ${girlfriendConfig.name}...` : "Escríbele...") : "Mensaje...")}
                         />
                         
                         <button
                           type="submit"
                           disabled={!messageInput.trim()}
-                          className={`p-3 rounded-2xl text-white font-bold transition-all shrink-0 shadow-lg cursor-pointer flex items-center justify-center aspect-square ${
+                          className={`p-2 sm:p-3 rounded-2xl text-white font-bold transition-all shrink-0 shadow-lg cursor-pointer flex items-center justify-center aspect-square ${
                             messageInput.trim() 
                               ? 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] shadow-indigo-500/10' 
                               : 'bg-slate-900 text-slate-600 border border-slate-800/80 cursor-not-allowed'
                           }`}
                         >
-                          <Send className="w-4 h-4" />
+                          <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </button>
                       </form>
                     </div>
