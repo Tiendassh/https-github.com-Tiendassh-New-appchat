@@ -15,21 +15,43 @@ export async function GET(req: NextRequest) {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+        'Referer': new URL(url).origin,
       },
-      next: { revalidate: 3600 } // Cache por 1 hora
+      next: { revalidate: 3600 } 
     });
 
     if (!response.ok) {
-      throw new Error(`Error del servidor original: ${response.status}`);
+      return new NextResponse(`Error del servidor remoto: ${response.status}`, { status: response.status });
+    }
+
+    const contentType = response.headers.get('content-type') || 'text/html';
+    
+    // Si no es HTML, lo servimos tal cual
+    if (!contentType.includes('text/html')) {
+        const blob = await response.blob();
+        return new NextResponse(blob, {
+            headers: {
+                'Content-Type': contentType,
+                'Access-Control-Allow-Origin': '*',
+                'X-Frame-Options': 'ALLOWALL',
+                'Content-Security-Policy': "frame-ancestors *",
+            }
+        });
     }
 
     let body = await response.text();
+
+    // Intentamos inyectar un <base> tag para resolver paths relativos
+    const urlObj = new URL(url);
+    const origin = urlObj.origin;
     
-    // Inyectamos una base URL para que los scripts y estilos relativos funcionen
-    const origin = new URL(url).origin;
     if (!body.includes('<base')) {
-      body = body.replace('<head>', `<head><base href="${origin}/">`);
+      if (body.includes('<head>')) {
+        body = body.replace('<head>', `<head><base href="${origin}/">`);
+      } else if (body.includes('<html>')) {
+        body = body.replace('<html>', `<html><head><base href="${origin}/"></head>`);
+      }
     }
 
     // Retornamos el contenido con cabeceras que permiten el iframe
@@ -37,7 +59,7 @@ export async function GET(req: NextRequest) {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
         'Access-Control-Allow-Origin': '*',
-        'X-Frame-Options': 'ALLOWALL', // Forzamos permiso
+        'X-Frame-Options': 'ALLOWALL', 
         'Content-Security-Policy': "frame-ancestors *; upgrade-insecure-requests",
         'Cache-Control': 'public, max-age=3600'
       },
